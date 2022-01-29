@@ -85,11 +85,11 @@ public class HUD : MonoBehaviour
 
                     collected = CheckCollectable(hitItem);
                 }
-            }
 
-            if (hitItem.collectable && collected)
-            {
-                hitItem.gameObject.SetActive(false);
+                if (hitItem.collectable && collected)
+                {
+                    hitItem.gameObject.SetActive(false);
+                }
             }
         }
 

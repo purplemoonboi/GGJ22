@@ -1,27 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour
 {
     public bool occupied;
     public GameObject slotObject;
-    public Camera previewCamera;
-    public IEnumerator CreatePreview()
+    public GameObject slotImage;
+    public Camera objectImageCamera;
+    ObjectImageSnapshot snapshot;
+    Texture2D texture;
+
+    void Start()
     {
-        yield return new WaitForEndOfFrame();
+        snapshot = objectImageCamera.GetComponent<ObjectImageSnapshot>();
+    }
 
-        RenderTexture saveTexture = RenderTexture.active;
-        RenderTexture.active = previewCamera.targetTexture;
-        previewCamera.Render();
+    void OnGUI()
+    {
+        if (texture != null)
+        {
+            slotImage.SetActive(true);
+            slotImage.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2());
+        }
+    }
 
-        Texture2D previewImage = new Texture2D(previewCamera.targetTexture.width, previewCamera.targetTexture.height);
-        previewImage.ReadPixels(new Rect(0, 0, previewCamera.targetTexture.width, previewCamera.targetTexture.height), 0, 0);
-        previewImage.Apply();
+    public void CreateSnapshot()
+    {
+        if (slotObject != null)
+        {
+            texture = snapshot.TakeObjectSnapshot(slotObject);
+        }
+    }
 
-        Renderer renderer = slotObject.GetComponent<Renderer>();
-        renderer.material.mainTexture = previewImage;
-
-        RenderTexture.active = saveTexture;
+    public void EraseSnapshot()
+    {
+        texture = null;
+        slotImage.SetActive(false);
     }
 }

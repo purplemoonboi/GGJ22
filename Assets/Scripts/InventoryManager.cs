@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
     public InventorySlot[] slots;
     public GameObject holdHand;
-    public GameObject camera;
+    public Camera mainCamera;
+
     public bool isHolding;
     private int currentIndex = 0;
     private KeyCode currentKey;
@@ -16,7 +18,6 @@ public class InventoryManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -25,7 +26,7 @@ public class InventoryManager : MonoBehaviour
         if (isHolding)
         {
             slots[currentIndex].slotObject.transform.position = holdHand.transform.position;
-            slots[currentIndex].slotObject.transform.rotation = camera.transform.rotation;
+            slots[currentIndex].slotObject.transform.rotation = mainCamera.transform.rotation;
 
             if(Input.GetKeyDown(currentKey))
                 putAwayItem = true;
@@ -88,10 +89,11 @@ public class InventoryManager : MonoBehaviour
             if(!slot.occupied)
             {
                 item.GetComponent<Interactable>().collectable = false;
-                item.SetActive(false);
                 slot.slotObject = item;
                 slot.occupied = true;
-                //slot.CreatePreview();
+                slot.GetComponent<InventorySlot>().CreateSnapshot();
+                item.SetActive(false);
+
                 break;
             }
         }
@@ -114,5 +116,6 @@ public class InventoryManager : MonoBehaviour
         slots[index].slotObject.GetComponent<Interactable>().collectable = true;
         slots[index].slotObject = null;
         slots[index].occupied = false;
+        slots[index].EraseSnapshot();
     }
 }
