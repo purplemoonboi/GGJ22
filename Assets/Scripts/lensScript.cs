@@ -19,10 +19,21 @@ public class lensScript : MonoBehaviour
     private Vector3 m_TargetPosition;
     [SerializeField]
     private bool m_ActiveCamera = false;
+    [SerializeField]
+    private bool m_FireRay;
+
+    [SerializeField]
+    public Transform m_OtherLensTransform;
+
+    // Bit shift the index of the layer (8) to get a bit mask
+    private int layerMask = 1 << 8;
 
     // Start is called before the first frame update
     void Start()
     {
+        //Invert mask
+        layerMask = ~layerMask;
+
         //Get access to the hand script in the children components.
         m_Hand = GetComponentInChildren<hand>();
 
@@ -36,6 +47,7 @@ public class lensScript : MonoBehaviour
 
         //Lerp the hand of the character.
         m_LerpHand = false;
+        m_FireRay = false;
         m_HandSpeed = 2.0f;
     }
 
@@ -48,20 +60,52 @@ public class lensScript : MonoBehaviour
             AnimateHand();
         }
 
-
-
+        if (Input.GetMouseButtonDown(0))
+        {
+            m_FireRay = true;
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            m_FireRay = false;
+        }
     }
 
+    private void FixedUpdate()
+    {
+        if(m_FireRay)
+        {
+            SimpleRayCast();
+        }
+    }
+
+
+    void SimpleRayCast()
+    {
+        RaycastHit hit;
+        
+        // Does the ray intersect any objects excluding the player layer - Cast the ray from the other camera.
+        if (Physics.Raycast(m_OtherLensTransform.position, m_OtherLensTransform.forward, out hit, Mathf.Infinity, layerMask))
+        {
+            GameObject other = hit.transform.gameObject;
+            if (other.tag == "collectable")
+            {
+                //Start animating collectable.
+                var script = other.GetComponent<AnimateCollectable>();
+                Vector3 target = m_OtherLensTransform.position;
+                script.SetTargetPosition(target);
+                script.SetShouldAnimate(true);
+            }
+        }
+    }
 
 
     void AnimateHand()
     {
-
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(1))
         {
             m_LerpHand = true;
         }
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(1))
         {
             m_LerpHand = false;
         }
