@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: DefaultWall
-  m_Shader: {fileID: 4800000, guid: fd8fbfeb3a473544f9f146c1c481f9f3, type: 3}
+  m_Name: SliceMaterial
+  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -72,9 +72,10 @@ Material:
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
+    - sliceOffsetDst: 0
     m_Colors:
-    - _Color: {r: 0.8207547, g: 0.20518868, b: 0.20518868, a: 1}
+    - _Color: {r: 0.23584908, g: 0.06341225, b: 0.06341225, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - sliceCentre: {r: 0, g: 0, b: 0, a: 0}
-    - sliceNormal: {r: 0, g: 0, b: 0, a: 0}
+    - sliceNormal: {r: 0, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
