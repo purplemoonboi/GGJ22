@@ -29,7 +29,7 @@ public class controller : MonoBehaviour
     [SerializeField]
     private bool        m_InvertXAxis;
     [SerializeField]
-    private float       m_RotationX;
+    private float       m_RotationY;
     [SerializeField]
     [Range(0, 360)]
     private float       m_LookLimitsX;
@@ -126,10 +126,14 @@ public class controller : MonoBehaviour
         }
         else
         {
-            m_RotationX += ((m_InvertXAxis) ? Input.GetAxis("Mouse Y") : -Input.GetAxis("Mouse Y"))  * m_LookSpeed;
-            m_RotationX = Mathf.Clamp(m_RotationX, -m_LookLimitsX, m_LookLimitsX);
-            m_Camera.transform.localRotation = Quaternion.Euler(m_RotationX, 0, 0);
+            m_RotationY += ((m_InvertXAxis) ? Input.GetAxis("Mouse Y") : -Input.GetAxis("Mouse Y"))  * m_LookSpeed;
+            m_RotationY = Mathf.Clamp(m_RotationY, -m_LookLimitsX, m_LookLimitsX);
+
+            //*around the x axis*
+            m_Camera.transform.localRotation = Quaternion.Euler(m_RotationY, 0, 0);
             transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * m_LookSpeed, 0);
+
+
         }
     }
 
