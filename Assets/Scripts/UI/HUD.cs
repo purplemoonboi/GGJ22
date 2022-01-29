@@ -91,6 +91,13 @@ public class HUD : MonoBehaviour
                     hitItem.gameObject.SetActive(false);
                 }
             }
+
+            else
+            {
+                interactingObject = null;
+                keyText.SetActive(false);
+                commandText.SetActive(false);
+            }
         }
 
         else
@@ -107,9 +114,10 @@ public class HUD : MonoBehaviour
         {
             if (Input.GetKeyDown(item.key))
             {
-                inventory.InsertItem(item.gameObject);
-
-                return true;
+                if (inventory.InsertItem(item.gameObject))
+                {
+                    return true;
+                }
             }
         }
 

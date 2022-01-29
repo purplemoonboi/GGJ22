@@ -79,10 +79,10 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public void InsertItem(GameObject item)
+    public bool InsertItem(GameObject item)
     {
         if (currentIndex >= 5)
-            return;
+            return false;
 
         foreach(InventorySlot slot in slots)
         {
@@ -94,9 +94,11 @@ public class InventoryManager : MonoBehaviour
                 slot.GetComponent<InventorySlot>().CreateSnapshot();
                 item.SetActive(false);
 
-                break;
+                return true;
             }
         }
+
+        return false;
     }
 
     public void RetrieveItem(int index)
