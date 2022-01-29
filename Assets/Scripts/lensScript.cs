@@ -74,6 +74,8 @@ public class lensScript : MonoBehaviour
     {
         if(m_FireRay)
         {
+            Debug.Log("Fire ray!");
+
             SimpleRayCast();
         }
     }
@@ -82,13 +84,14 @@ public class lensScript : MonoBehaviour
     void SimpleRayCast()
     {
         RaycastHit hit;
-        
+        Vector3 forward = transform.worldToLocalMatrix.MultiplyVector(m_OtherLensTransform.forward);
         // Does the ray intersect any objects excluding the player layer - Cast the ray from the other camera.
-        if (Physics.Raycast(m_OtherLensTransform.position, m_OtherLensTransform.forward, out hit, Mathf.Infinity, layerMask))
+        if (Physics.Raycast(m_OtherLensTransform.position, forward, out hit, 100.0f, layerMask))
         {
             GameObject other = hit.transform.gameObject;
             if (other.tag == "collectable")
             {
+                Debug.Log("Coillectable hit!");
                 //Start animating collectable.
                 var script = other.GetComponent<AnimateCollectable>();
                 Vector3 target = m_OtherLensTransform.position;
