@@ -20,7 +20,7 @@ public class lensCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = m_OtherTransform.position + new Vector3(-60, 0, 0);
+        transform.position = m_OtherTransform.position + new Vector3(-60, -20, 0);
         transform.rotation = m_OtherCamTransform.rotation;
     }
 }

@@ -31,7 +31,6 @@ public class AnimateCollectable : MonoBehaviour
         if(m_ShouldAnimate)
         {
             Animate();
-            Debug.Log("Animating");
         }
     }
 

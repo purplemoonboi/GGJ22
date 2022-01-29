@@ -8,6 +8,7 @@ TagManager:
   - hand
   - capture
   - collectable
+  - lens
   layers:
   - Default
   - TransparentFX
