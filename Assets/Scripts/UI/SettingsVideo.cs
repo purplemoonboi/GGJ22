@@ -11,8 +11,8 @@ public class SettingsVideo : MonoBehaviour
     private List<string> resolutionOptions;
 
     private bool checkIsFullscreen;
-    public Resolution currentResolution;
-    public int currentGraphicsQualityLevel;
+    public static Resolution currentResolution;
+    public static int currentGraphicsQualityLevel;
 
     [Header("Buttons")]
     public Button lowQuality;

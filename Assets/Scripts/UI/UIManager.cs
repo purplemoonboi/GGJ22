@@ -11,7 +11,6 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        inMainMenu = true;
         isPaused = false;
         inMenu = false;
         cursorActive = true;

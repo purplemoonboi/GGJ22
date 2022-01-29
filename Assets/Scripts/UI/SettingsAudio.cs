@@ -11,13 +11,17 @@ public class SettingsAudio : MonoBehaviour
     [Header("Buttons")]
     public Button backButton;
 
+    public Slider masterSlider;
+    public Slider effectsSlider;
+    public Slider musicSlider;
+
     [Header("Menus")]
     public GameObject audioMenu;
     public GameObject settingsMenu;
     public AudioMixer audioMixer;
-    public float masterVolume;
-    public float effectsVolume;
-    public float musicVolume;
+    public static float masterVolume = 1.0f;
+    public static float effectsVolume = 1.0f;
+    public static float musicVolume = 1.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +38,24 @@ public class SettingsAudio : MonoBehaviour
         {
             GoBack();
         }
+    }
+
+    private void OnEnable()
+    {
+        //masterVolume = PlayerPrefs.GetFloat("MasterVolume");
+        //musicVolume = PlayerPrefs.GetFloat("MusicVolume");
+        //effectsVolume = PlayerPrefs.GetFloat("EffectsVolume");
+        //
+        //masterSlider.value = masterVolume;
+        //musicSlider.value = musicVolume;
+        //effectsSlider.value = effectsVolume;
+    }
+
+    private void OnDisable()
+    {
+        //PlayerPrefs.SetFloat("MasterVolume", masterVolume);
+        //PlayerPrefs.SetFloat("MusicVolume", musicVolume);
+        //PlayerPrefs.SetFloat("EffectsVolume", effectsVolume);
     }
 
     public void SetMasterVolume(float volume)
