@@ -6,9 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/bridget_test.unity
-    guid: f8ba47e16dd08184083a3a954d784684
-  - enabled: 1
-    path: Assets/Scenes/bridget_test_level.unity
-    guid: d449ac74015818445aa4befa7cd972ab
+    path: Assets/Scenes/MainMenu.unity
+    guid: e2a9b4ccec4921047a90ccfa474b3713
   m_configObjects: {}
