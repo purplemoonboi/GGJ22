@@ -3,6 +3,8 @@ using UnityEngine;
 using System;
 using System.Collections;
 
+//Author: Dave Carlile @ crappycoding.com
+//Code Source: https://crappycoding.com/2014/12/create-gameobject-image-using-render-textures/
 public class ObjectImageSnapshot : MonoBehaviour
 {
     public Camera objectImageCamera;

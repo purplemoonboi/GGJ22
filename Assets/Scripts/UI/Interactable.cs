@@ -10,16 +10,6 @@ public class Interactable : MonoBehaviour
     public float distance;
     public bool collectable;
 
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
-    }
-
     public void setDistance(float distance)
     {
         this.distance = distance;

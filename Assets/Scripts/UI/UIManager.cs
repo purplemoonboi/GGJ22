@@ -5,12 +5,17 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
+    private controller playerController;
+
     public bool inMainMenu, isPaused, inMenu, cursorActive;
+    public GameObject hud;
     public GameObject currentMenu;
     public GameObject[] menus;
 
     void Start()
     {
+        playerController = GameObject.FindObjectOfType<controller>();
+
         isPaused = false;
         inMenu = false;
         cursorActive = true;
@@ -43,6 +48,21 @@ public class UIManager : MonoBehaviour
         else
         {
             SetCursorActive(false);
+        }
+
+        if (!inMainMenu)
+        {
+            if (isPaused)
+            {
+                hud.SetActive(false);
+                playerController.enabled = false;
+            }
+
+            else
+            {
+                hud.SetActive(true);
+                playerController.enabled = true;
+            }
         }
     }
 

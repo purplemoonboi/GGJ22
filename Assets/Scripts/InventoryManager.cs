@@ -1,31 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
-    public InventorySlot[] slots;
-    public GameObject holdHand;
-    public GameObject camera;
-    public bool isHolding;
+    private HUD hud;
     private int currentIndex = 0;
     private KeyCode currentKey;
     private bool dropItem = false;
     private bool putAwayItem = false;
 
+    public InventorySlot[] slots;
+    public GameObject holdHand;
+    public Camera mainCamera;
+    public bool isHolding;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        hud = GameObject.FindObjectOfType<HUD>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (isHolding)
         {
             slots[currentIndex].slotObject.transform.position = holdHand.transform.position;
-            slots[currentIndex].slotObject.transform.rotation = camera.transform.rotation;
+            slots[currentIndex].slotObject.transform.rotation = mainCamera.transform.rotation;
 
             if(Input.GetKeyDown(currentKey))
                 putAwayItem = true;
@@ -34,6 +36,7 @@ public class InventoryManager : MonoBehaviour
                 dropItem = true;
         }
 
+        //Not ideal but works for now, better solution would be using a switch statement for evaluating and/or a dictionary to store values by key
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             currentKey = KeyCode.Alpha1;
@@ -78,27 +81,35 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public void InsertItem(GameObject item)
+    public bool InsertItem(GameObject item)
     {
         if (currentIndex >= 5)
-            return;
+            return false;
 
         foreach(InventorySlot slot in slots)
         {
             if(!slot.occupied)
             {
                 item.GetComponent<Interactable>().collectable = false;
-                item.SetActive(false);
                 slot.slotObject = item;
                 slot.occupied = true;
-                //slot.CreatePreview();
-                break;
+                slot.GetComponent<InventorySlot>().CreateSnapshot();
+                item.SetActive(false);
+
+                StartCoroutine(hud.Notify("Picked up " + slot.slotObject.name));
+
+                return true;
             }
         }
+
+        return false;
     }
 
     public void RetrieveItem(int index)
     {
+        if (!slots[index].occupied)
+            return;
+
         if(slots[currentIndex].occupied)
         {
             slots[currentIndex].slotObject.SetActive(false);
@@ -114,5 +125,6 @@ public class InventoryManager : MonoBehaviour
         slots[index].slotObject.GetComponent<Interactable>().collectable = true;
         slots[index].slotObject = null;
         slots[index].occupied = false;
+        slots[index].EraseSnapshot();
     }
 }
