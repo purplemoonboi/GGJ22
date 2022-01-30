@@ -1,26 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
-    public InventorySlot[] slots;
-    public GameObject holdHand;
-    public Camera mainCamera;
-
-    public bool isHolding;
+    private HUD hud;
     private int currentIndex = 0;
     private KeyCode currentKey;
     private bool dropItem = false;
     private bool putAwayItem = false;
 
+    public InventorySlot[] slots;
+    public GameObject holdHand;
+    public Camera mainCamera;
+    public bool isHolding;
+
     // Start is called before the first frame update
     void Start()
     {
+        hud = GameObject.FindObjectOfType<HUD>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (isHolding)
@@ -35,6 +36,7 @@ public class InventoryManager : MonoBehaviour
                 dropItem = true;
         }
 
+        //Not ideal but works for now, better solution would be using a switch statement for evaluating and/or a dictionary to store values by key
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             currentKey = KeyCode.Alpha1;
@@ -94,6 +96,8 @@ public class InventoryManager : MonoBehaviour
                 slot.GetComponent<InventorySlot>().CreateSnapshot();
                 item.SetActive(false);
 
+                StartCoroutine(hud.Notify("Picked up " + slot.slotObject.name));
+
                 return true;
             }
         }
@@ -103,6 +107,9 @@ public class InventoryManager : MonoBehaviour
 
     public void RetrieveItem(int index)
     {
+        if (!slots[index].occupied)
+            return;
+
         if(slots[currentIndex].occupied)
         {
             slots[currentIndex].slotObject.SetActive(false);

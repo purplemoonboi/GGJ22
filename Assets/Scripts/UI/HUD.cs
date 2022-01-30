@@ -8,6 +8,7 @@ public class HUD : MonoBehaviour
     private Interactable interactingObject;
     private InventoryManager inventory;
     private bool collected = false;
+    private bool interacted = false;
 
     [Header("Interaction")]
     public GameObject keyText;
@@ -26,8 +27,6 @@ public class HUD : MonoBehaviour
 
     void Update()
     {
-        CheckInteractables();
-
         if (interactingObject != null)
         {
             crosshair.SetActive(false);
@@ -35,7 +34,10 @@ public class HUD : MonoBehaviour
 
             if(interactingObject.collectable && collected)
             {
-                interactingObject.gameObject.SetActive(false);
+                if (collected)
+                {
+                    interactingObject.gameObject.SetActive(false);
+                }
             }
         }
 
@@ -44,11 +46,14 @@ public class HUD : MonoBehaviour
             crosshair.SetActive(true);
             expandedCrosshair.SetActive(false);
         }
+
+        //Checking for interactions and processing them have to be separate because key presses may not always trigger in FixedUpdate
+        ProcessInteraction();
     }
 
     private void FixedUpdate()
     {
-        //CheckInteractables();
+        CheckInteractables();
     }
 
     private void OnDrawGizmos()
@@ -76,19 +81,8 @@ public class HUD : MonoBehaviour
             {
                 if (hit.distance <= hitItem.distance)
                 {
-                    collected = false;
-                    keyText.GetComponent<Text>().text = hitItem.gameObject.GetComponent<Interactable>().getKeyText();
-                    commandText.GetComponent<Text>().text = hitItem.gameObject.GetComponent<Interactable>().getCommandText();
                     interactingObject = hitItem;
-                    keyText.SetActive(true);
-                    commandText.SetActive(true);
-
-                    collected = CheckCollectable(hitItem);
-                }
-
-                if (hitItem.collectable && collected)
-                {
-                    hitItem.gameObject.SetActive(false);
+                    interacted = true;
                 }
             }
 
@@ -124,11 +118,29 @@ public class HUD : MonoBehaviour
         return false;
     }
 
+    public void ProcessInteraction()
+    {
+        collected = false;
+        keyText.GetComponent<Text>().text = interactingObject.gameObject.GetComponent<Interactable>().getKeyText();
+        commandText.GetComponent<Text>().text = interactingObject.gameObject.GetComponent<Interactable>().getCommandText();
+        keyText.SetActive(true);
+        commandText.SetActive(true);
+
+        collected = CheckCollectable(interactingObject);
+
+       if (interactingObject.collectable && collected)
+       {
+            interactingObject.gameObject.SetActive(false);
+       }
+
+        interacted = false;
+    }
+
     public IEnumerator Notify(string text)
     {
         notificationText.GetComponent<Text>().text = text;
         notificationText.GetComponent<Animator>().SetBool("isNotifying", true);
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1.75f);
         notificationText.GetComponent<Animator>().SetBool("isNotifying", false);
         StopCoroutine(Notify(text));
     }

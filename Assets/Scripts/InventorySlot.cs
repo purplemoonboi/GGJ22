@@ -23,6 +23,7 @@ public class InventorySlot : MonoBehaviour
         {
             slotImage.SetActive(true);
             slotImage.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2());
+            texture = null; //Setting the texture back to null so the inventory slot icon isn't regenerated unnecessarily
         }
     }
 
