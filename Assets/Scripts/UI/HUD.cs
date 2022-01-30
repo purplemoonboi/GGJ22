@@ -11,49 +11,62 @@ public class HUD : MonoBehaviour
     private bool interacted = false;
 
     [Header("Interaction")]
-    public GameObject keyText;
-    public GameObject commandText;
-    public Camera camera;
+    [SerializeField]
+    private GameObject keyText;
+    [SerializeField]
+    private GameObject commandText;
+    [SerializeField]
+    private Camera camera;
 
     [Header("Menus")]
-    public GameObject crosshair;
-    public GameObject expandedCrosshair;
-    public GameObject notificationText;
+    [SerializeField]
+    private GameObject crosshair;
+    [SerializeField]
+    private GameObject expandedCrosshair;
+    [SerializeField]
+    private GameObject notificationText;
+
+   // [SerializeField]
+   // private AnimateCollectable animScriptRef;
 
     void Start()
     {
-        inventory = GameObject.FindObjectOfType<InventoryManager>();
+       // animScriptRef = GetComponent<AnimateCollectable>();
+        inventory = FindObjectOfType<InventoryManager>();
     }
 
     void Update()
     {
-        if (interactingObject != null)
-        {
-            crosshair.SetActive(false);
-            expandedCrosshair.SetActive(true);
-
-            if(interactingObject.collectable && collected)
+         if (interactingObject != null)
             {
-                if (collected)
+                crosshair.SetActive(false);
+                expandedCrosshair.SetActive(true);
+
+                if (interactingObject.collectable && collected)
                 {
-                    interactingObject.gameObject.SetActive(false);
+                    if (collected)
+                    {
+                        interactingObject.gameObject.SetActive(false);
+                    }
                 }
             }
-        }
 
-        else
-        {
-            crosshair.SetActive(true);
-            expandedCrosshair.SetActive(false);
-        }
+            else
+            {
+                crosshair.SetActive(true);
+                expandedCrosshair.SetActive(false);
+            }
 
-        //Checking for interactions and processing them have to be separate because key presses may not always trigger in FixedUpdate
-        ProcessInteraction();
+            //Checking for interactions and processing them have to be separate because key presses may not always trigger in FixedUpdate
+            ProcessInteraction();
+        
     }
 
     private void FixedUpdate()
     {
-        CheckInteractables();
+        
+            CheckInteractables();
+        
     }
 
     private void OnDrawGizmos()
@@ -120,20 +133,33 @@ public class HUD : MonoBehaviour
 
     public void ProcessInteraction()
     {
-        collected = false;
-        keyText.GetComponent<Text>().text = interactingObject.gameObject.GetComponent<Interactable>().getKeyText();
-        commandText.GetComponent<Text>().text = interactingObject.gameObject.GetComponent<Interactable>().getCommandText();
-        keyText.SetActive(true);
-        commandText.SetActive(true);
+        if(interactingObject != null)
+        {
+            collected = false;
+            string kText = interactingObject.gameObject.GetComponent<Interactable>().getKeyText();
+            if (kText != null)
+            {
+                keyText.GetComponent<Text>().text = kText;
+            }
 
-        collected = CheckCollectable(interactingObject);
+            string cText = interactingObject.gameObject.GetComponent<Interactable>().getCommandText();
+            if (cText != null)
+            {
+                commandText.GetComponent<Text>().text = cText;
+            }
 
-       if (interactingObject.collectable && collected)
-       {
-            interactingObject.gameObject.SetActive(false);
-       }
+            keyText.SetActive(true);
+            commandText.SetActive(true);
 
-        interacted = false;
+            collected = CheckCollectable(interactingObject);
+
+            if (interactingObject.collectable && collected)
+            {
+                interactingObject.gameObject.SetActive(false);
+            }
+
+            interacted = false;
+        }
     }
 
     public IEnumerator Notify(string text)

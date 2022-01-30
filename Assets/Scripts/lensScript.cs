@@ -96,13 +96,13 @@ public class lensScript : MonoBehaviour
 
         RaycastHit hit;
         Ray ray = new Ray(m_OtherCamera.position, m_OtherCamera.forward);
-        if (Physics.Raycast(ray, out hit, 10000000.0f))
+        if (Physics.Raycast(ray, out hit, 100.0f, layerMask))
         {
+            Debug.Log("Wee hit " + hit.transform.tag);
 
             GameObject other = hit.transform.gameObject;
             if (hit.transform.tag == "collectable")
             {
-                Debug.Log("Wee hit " + hit.transform.tag);
 
                 //Start animating collectable.
                 var script = other.GetComponent<AnimateCollectable>();

@@ -9,6 +9,7 @@ TagManager:
   - capture
   - collectable
   - lens
+  - pickLoc
   layers:
   - Default
   - TransparentFX
