@@ -23,7 +23,7 @@ public class lensScript : MonoBehaviour
     private bool m_FireRay;
 
     [SerializeField]
-    public Transform m_OtherLensTransform;
+    private Transform m_OtherCamera;
 
     // Bit shift the index of the layer (8) to get a bit mask
     private int layerMask = 1 << 8;
@@ -31,8 +31,6 @@ public class lensScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Invert mask
-        layerMask = ~layerMask;
 
         //Get access to the hand script in the children components.
         m_Hand = GetComponentInChildren<hand>();
@@ -60,7 +58,7 @@ public class lensScript : MonoBehaviour
             AnimateHand();
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
             m_FireRay = true;
         }
@@ -70,33 +68,45 @@ public class lensScript : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    public void FixedUpdate()
     {
         if(m_FireRay)
         {
-            Debug.Log("Fire ray!");
-
+            hasfired = true;
             SimpleRayCast();
+        }
+        else
+        {
+            hasfired = false;
         }
     }
 
+    bool hasfired = false;
+
+    private void OnDrawGizmos()
+    {
+        if (hasfired)
+        {
+            Gizmos.DrawLine(m_OtherCamera.position, m_OtherCamera.position + m_OtherCamera.forward);
+        }
+    }
 
     void SimpleRayCast()
     {
+
         RaycastHit hit;
-        Vector3 forward = transform.worldToLocalMatrix.MultiplyVector(m_OtherLensTransform.forward);
-        // Does the ray intersect any objects excluding the player layer - Cast the ray from the other camera.
-        if (Physics.Raycast(m_OtherLensTransform.position, forward, out hit, 100.0f, layerMask))
+        Ray ray = new Ray(m_OtherCamera.position, m_OtherCamera.forward);
+        if (Physics.Raycast(ray, out hit, 10000000.0f))
         {
+
             GameObject other = hit.transform.gameObject;
-            if (other.tag == "collectable")
+            if (hit.transform.tag == "collectable")
             {
-                Debug.Log("Coillectable hit!");
+                Debug.Log("Wee hit " + hit.transform.tag);
+
                 //Start animating collectable.
                 var script = other.GetComponent<AnimateCollectable>();
-                Vector3 target = m_OtherLensTransform.position;
-                script.SetTargetPosition(target);
-                script.SetShouldAnimate(true);
+                script.Teleport();
             }
         }
     }

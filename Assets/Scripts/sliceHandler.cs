@@ -10,7 +10,6 @@ public class sliceHandler : MonoBehaviour
     GameObject         m_MagnifyingGlass;
     [SerializeField]
     private Material   m_Material;
-
     [SerializeField]
     private GameObject m_CloneBlueprint;
     [SerializeField]
